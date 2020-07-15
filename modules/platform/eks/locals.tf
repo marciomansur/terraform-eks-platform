@@ -1,8 +1,8 @@
 locals {
-  cluster_name = "${var.name}-cluster"
+  cluster_name = "${var.name}-${var.env}-cluster"
 
   tags = merge({
-    Name        = "${var.name}-${var.region}-${var.env}-vpc"
+    Name        = "${var.name}-${var.region}-${var.env}-eks"
     Environment = var.env
     Region      = var.region
     Component   = "EKS"

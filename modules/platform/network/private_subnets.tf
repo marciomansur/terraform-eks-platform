@@ -18,7 +18,7 @@ resource "aws_subnet" "db_private_subnet" {
   tags = local.tags
 }
 
-resource "aws_route_table" "private_route_tables" {
+resource "aws_route_table" "app_route_tables" {
   count  = length(var.azs)
   vpc_id = aws_vpc.vpc.id
 
@@ -30,8 +30,20 @@ resource "aws_route_table" "private_route_tables" {
   tags = local.tags
 }
 
-resource "aws_route_association" "app_route_association" {
+resource "aws_route_table" "db_route_tables" {
+  count  = length(var.azs)
+  vpc_id = aws_vpc.vpc.id
+  tags = local.tags
+}
+
+resource "aws_route_table_association" "app_route_association" {
   count          = length(var.azs)
   subnet_id      = aws_subnet.app_private_subnet.*.id[count.index]
-  route_table_id = aws_route_table.private_route_tables.*.id[count.index]
+  route_table_id = aws_route_table.app_route_tables.*.id[count.index]
+}
+
+resource "aws_route_table_association" "db_route_association" {
+  count          = length(var.azs)
+  subnet_id      = aws_subnet.db_private_subnet.*.id[count.index]
+  route_table_id = aws_route_table.db_route_tables.*.id[count.index]
 }
