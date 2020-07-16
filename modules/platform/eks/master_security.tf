@@ -1,5 +1,5 @@
 resource "aws_security_group" "master_security_group" {
-  name   = "${local.cluster_name}-master-sg"
+  name   = "${var.cluster_name}-master-sg"
   vpc_id = var.vpc_id
 
   egress {

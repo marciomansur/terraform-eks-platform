@@ -1,5 +1,5 @@
 resource "aws_iam_role" "worker_node_role" {
-  name = "${local.cluster_name}-worker-node-role"
+  name = "${var.cluster_name}-worker-node-role"
 
   assume_role_policy = <<POLICY
 {
@@ -38,12 +38,12 @@ resource "aws_iam_role_policy_attachment" "worker_node_AmazonEC2FullAccess" {
 }
 
 resource "aws_iam_instance_profile" "worker_node_instance_profile" {
-  name = local.cluster_name
+  name = var.cluster_name
   role = aws_iam_role.worker_node_role.name
 }
 
 resource "aws_security_group" "worker_node_security_group" {
-  name   = "${local.cluster_name}-worker-node-sg"
+  name   = "${var.cluster_name}-worker-node-sg"
   vpc_id = var.vpc_id
 
   egress {

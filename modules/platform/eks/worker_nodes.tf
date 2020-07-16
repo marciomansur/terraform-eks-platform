@@ -4,7 +4,7 @@ data "template_file" "start_worker" {
   vars = {
     cluster_endpoint = aws_eks_cluster.cluster.endpoint
     cluster_ca       = aws_eks_cluster.cluster.certificate_authority.0.data
-    cluster_name     = local.cluster_name
+    cluster_name     = var.cluster_name
   }
 }
 
@@ -16,6 +16,14 @@ data "aws_ami" "worker_node_ami" {
 
   most_recent = true
   owners      = ["602401143452"] # Amazon EKS AMI Account ID
+}
+
+resource "aws_lb_target_group" "cluster_tg" {
+  name = "${aws_eks_cluster.cluster.name}-tg"
+  port = 31742
+  protocol = "HTTP"
+  vpc_id = var.vpc_id
+  target_type = "instance"
 }
 
 resource "aws_launch_configuration" "worker_launch_config" {
@@ -40,6 +48,7 @@ resource "aws_autoscaling_group" "app_nodes_asg" {
   min_size             = var.app_size
   launch_configuration = aws_launch_configuration.worker_launch_config.id
   vpc_zone_identifier  = [var.app_subnet_ids]
+  target_group_arns    = [aws_lb_target_group.cluster_tg.arn]
 
   tag {
     key                 = "Name"

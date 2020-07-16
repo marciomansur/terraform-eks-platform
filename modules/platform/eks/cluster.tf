@@ -1,5 +1,5 @@
 resource "aws_iam_role" "cluster_role" {
-  name = "${local.cluster_name}-role"
+  name = "${var.cluster_name}-role"
 
   assume_role_policy = <<POLICY
 {
@@ -28,7 +28,7 @@ resource "aws_iam_role_policy_attachment" "cluster_role_AmazonEKSServicePolicy" 
 }
 
 resource "aws_eks_cluster" "cluster" {
-  name     = local.cluster_name
+  name     = var.cluster_name
   role_arn = aws_iam_role.cluster_role.arn
 
   vpc_config {

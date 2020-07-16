@@ -1,9 +1,9 @@
 locals {
   tags = merge({
-    Name        = "${var.name}-${var.region}-${var.env}-eks"
+    Name        = var.cluster_name
     Environment = var.env
     Region      = var.region
-    Component   = "EKS"
+    Component   = "vpc"
     ManagedBy   = "Terraform"
   }, map("kubernetes.io/cluster/${var.cluster_name}", "shared"))
 }
