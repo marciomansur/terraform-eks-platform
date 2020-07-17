@@ -1,8 +1,3 @@
-variable "name" {
-  type        = "string"
-  description = "Name of current infrastructure platform"
-}
-
 variable "cluster_name" {
   type        = "string"
   description = "If you're using Kubernetes or ECS, its name"

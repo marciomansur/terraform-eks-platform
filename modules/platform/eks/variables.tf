@@ -1,8 +1,3 @@
-variable "name" {
-  type        = "string"
-  description = "Name of current infrastructure platform"
-}
-
 variable "cluster_name" {
   type        = "string"
   description = "If you're using Kubernetes or ECS, its name"
@@ -19,15 +14,6 @@ variable "instance_type" {
 }
 
 variable "env" {
-  type = "string"
-}
-
-variable "key_pair_name" {
-  type        = "string"
-  description = "Key pair to access instances via SSH"
-}
-
-variable "workstation_ip" {
   type = "string"
 }
 
@@ -51,3 +37,20 @@ variable "db_subnet_ids" {
 }
 
 variable "db_size" {}
+
+variable "enable_ssh" {
+  default     = false
+  description = "Flag to enable SSH access to worker nodes"
+}
+
+variable "key_pair_name" {
+  type        = "string"
+  description = "Key pair to access instances via SSH"
+  default     = null
+}
+
+variable "workstation_ip" {
+  type        = "string"
+  description = "IP from workstation to access the worker nodes"
+  default     = null
+}

@@ -26,7 +26,7 @@ resource "aws_security_group_rule" "worker_node_ingress_https_rule" {
 }
 
 resource "aws_security_group_rule" "workstation_https_access" {
-  count             = var.workstation_ip ? 1 : 0
+  count             = var.enable_ssh == true ? 1 : 0
   type              = "ingress"
   from_port         = 443
   protocol          = "tcp"
@@ -36,7 +36,7 @@ resource "aws_security_group_rule" "workstation_https_access" {
 }
 
 resource "aws_security_group_rule" "workstation_ssh_access" {
-  count             = var.workstation_ip ? 1 : 0
+  count             = var.enable_ssh == true ? 1 : 0
   type              = "ingress"
   from_port         = 22
   protocol          = "tcp"

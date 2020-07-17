@@ -33,7 +33,7 @@ resource "aws_route_table" "app_route_tables" {
 resource "aws_route_table" "db_route_tables" {
   count  = length(var.azs)
   vpc_id = aws_vpc.vpc.id
-  tags = local.tags
+  tags   = local.tags
 }
 
 resource "aws_route_table_association" "app_route_association" {

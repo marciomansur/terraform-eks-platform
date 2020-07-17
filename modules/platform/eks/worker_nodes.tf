@@ -19,19 +19,19 @@ data "aws_ami" "worker_node_ami" {
 }
 
 resource "aws_lb_target_group" "cluster_tg" {
-  name = "${aws_eks_cluster.cluster.name}-tg"
-  port = 31742
-  protocol = "HTTP"
-  vpc_id = var.vpc_id
+  name        = "${aws_eks_cluster.cluster.name}-tg"
+  port        = 31742
+  protocol    = "HTTP"
+  vpc_id      = var.vpc_id
   target_type = "instance"
 }
 
 resource "aws_launch_configuration" "worker_launch_config" {
+  name_prefix                 = "${aws_eks_cluster.cluster.name}-node"
   associate_public_ip_address = true
   aws_iam_instance_profile    = aws_iam_instance_profile.worker_node_instance_profile.name
   image_id                    = data.aws_ami.worker_node_ami.id
   instance_type               = var.instance_type
-  name_prefix                 = aws_eks_cluster.cluster.name
   key_name                    = var.key_pair_name
   security_groups             = [aws_security_group.worker_node_security_group.id]
   user_data_base64            = base64encode(data.template_file.start_worker.rendered)
@@ -52,7 +52,7 @@ resource "aws_autoscaling_group" "app_nodes_asg" {
 
   tag {
     key                 = "Name"
-    value               = var.name
+    value               = "${var.cluster_name}-db-node"
     propagate_at_launch = true
   }
 
@@ -77,7 +77,7 @@ resource "aws_autoscaling_group" "db_nodes_asg" {
 
   tag {
     key                 = "Name"
-    value               = var.name
+    value               = "${var.cluster_name}-db-node"
     propagate_at_launch = true
   }
 

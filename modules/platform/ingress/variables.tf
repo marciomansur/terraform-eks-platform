@@ -21,20 +21,15 @@ variable "public_subnets_ids" {
 }
 
 variable "worker_sg_id" {
-  type = "string"
+  type        = "string"
   description = "Security group ID, used by Kubernetes nodes"
 }
 
 variable "lb_target_group_arn" {
-  type = "string"
+  type        = "string"
   description = "Target Group's ARN pointing at the Kubernetes nodes"
 }
 
 variable "public_domain" {
   type = "string"
-}
-
-variable "use_public_domain" {
-  type = "string"
-  description = "Check if public domain will be used to reach the cluster. Requires a public hosted zone"
 }
