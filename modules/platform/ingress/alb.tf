@@ -29,7 +29,7 @@ resource "aws_security_group" "cluster_alb_sg" {
 
 resource "aws_lb" "cluster_alb" {
   name               = "${var.cluster_name}-alb"
-  subnets            = [var.public_subnets_ids]
+  subnets            = var.public_subnets_ids
   security_groups    = [var.worker_sg_id, aws_security_group.cluster_alb_sg.id]
   load_balancer_type = "application"
   ip_address_type    = "ipv4"

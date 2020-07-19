@@ -1,12 +1,12 @@
-resource "aws_key_pair" "cluster_key_pair" {
-  count      = var.enable_ssh == true ? 1 : 0
-  key_name   = "${var.cluster_name}-key-pair"
-  public_key = file(var.public_key_path)
-
-  lifecycle {
-    create_before_destroy = true
-  }
-}
+//resource "aws_key_pair" "cluster_key_pair" {
+//  count      = var.enable_ssh == true ? 1 : 0
+//  key_name   = "${var.cluster_name}-key-pair"
+//  public_key = file(var.public_key_path)
+//
+//  lifecycle {
+//    create_before_destroy = true
+//  }
+//}
 
 module "network" {
   source = "./network"
@@ -34,17 +34,16 @@ module "eks" {
   db_size       = var.db_size
 
   enable_ssh     = var.enable_ssh
-  key_pair_name  = aws_key_pair.cluster_key_pair.key_name
   workstation_ip = var.workstation_ip
 }
 
 module "ingress" {
   source = "./ingress"
 
-  cluster_name = var.cluster_name
-  env          = var.env
-  region       = var.region
-  public_domain       = var.public_domain
+  cluster_name  = var.cluster_name
+  env           = var.env
+  region        = var.region
+  public_domain = var.public_domain
 
   lb_target_group_arn = module.eks.lb_target_group_arn
   worker_sg_id        = module.eks.worker_sg_id
@@ -53,5 +52,5 @@ module "ingress" {
 }
 
 output "cluster_kubeconfig" {
-  value = ""
+  value = module.eks.cluster_kubeconfig
 }

@@ -1,0 +1,9 @@
+name          = "marciotech"
+env           = "dev"
+region        = "eu-central-1"
+azs           = ["eu-central-1a", "eu-central-1b", "eu-central-1c"]
+app_size      = 3
+db_size       = 1
+instance_type = "t2.medium"
+public_domain = "marciotech.xyz"
+profile       = "marciotech"

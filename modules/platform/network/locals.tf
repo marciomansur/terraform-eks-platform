@@ -6,7 +6,6 @@ locals {
   db_cidr_blocks     = ["20.10.21.0/24", "20.10.22.0/24", "20.10.23.0/24"]
 
   tags = merge({
-    Name        = "${var.name}-${var.region}-${var.env}-vpc"
     Environment = var.env
     Region      = var.region
     Component   = "vpc"

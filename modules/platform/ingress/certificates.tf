@@ -1,5 +1,5 @@
 resource "aws_acm_certificate" "cluster_cert" {
-  domain_name       = aws_route53_zone.alb_record.name
+  domain_name       = aws_route53_record.alb_record.name
   validation_method = "DNS"
 }
 

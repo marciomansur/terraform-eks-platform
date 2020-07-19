@@ -1,5 +1,5 @@
 resource "aws_eip" "nat_ips" {
-  count = lenght(var.azs)
+  count = length(var.azs)
   vpc   = true
 
   lifecycle {

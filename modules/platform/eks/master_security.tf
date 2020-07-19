@@ -25,22 +25,22 @@ resource "aws_security_group_rule" "worker_node_ingress_https_rule" {
   to_port                  = 443
 }
 
-resource "aws_security_group_rule" "workstation_https_access" {
-  count             = var.enable_ssh == true ? 1 : 0
-  type              = "ingress"
-  from_port         = 443
-  protocol          = "tcp"
-  security_group_id = aws_security_group.master_security_group.id
-  cidr_blocks       = [var.workstation_ip]
-  to_port           = 443
-}
-
-resource "aws_security_group_rule" "workstation_ssh_access" {
-  count             = var.enable_ssh == true ? 1 : 0
-  type              = "ingress"
-  from_port         = 22
-  protocol          = "tcp"
-  security_group_id = aws_security_group.master_security_group.id
-  cidr_blocks       = [var.workstation_ip]
-  to_port           = 22
-}
+//resource "aws_security_group_rule" "workstation_https_access" {
+//  count             = var.enable_ssh == true ? 1 : 0
+//  type              = "ingress"
+//  from_port         = 443
+//  protocol          = "tcp"
+//  security_group_id = aws_security_group.master_security_group.id
+//  cidr_blocks       = [var.workstation_ip]
+//  to_port           = 443
+//}
+//
+//resource "aws_security_group_rule" "workstation_ssh_access" {
+//  count             = var.enable_ssh == true ? 1 : 0
+//  type              = "ingress"
+//  from_port         = 22
+//  protocol          = "tcp"
+//  security_group_id = aws_security_group.master_security_group.id
+//  cidr_blocks       = [var.workstation_ip]
+//  to_port           = 22
+//}
