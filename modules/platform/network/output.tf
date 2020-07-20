@@ -17,3 +17,11 @@ output "app_subnet_ids" {
 output "db_subnet_ids" {
   value = aws_subnet.db_private_subnet.*.id
 }
+
+output "app_subnet_cidr" {
+  value = aws_subnet.app_private_subnet.*.cidr_block
+}
+
+output "db_subnet_cidr" {
+  value = aws_subnet.db_private_subnet.*.cidr_block
+}

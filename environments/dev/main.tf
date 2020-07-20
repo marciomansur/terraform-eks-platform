@@ -15,3 +15,11 @@ module "platform" {
 output "cluster_kubeconfig" {
   value = module.platform.cluster_kubeconfig
 }
+
+output "cluster_name" {
+  value = module.platform.cluster_name
+}
+
+output "cluster_public_domain" {
+  value = module.platform.cluster_public_domain
+}

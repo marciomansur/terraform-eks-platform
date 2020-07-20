@@ -13,9 +13,10 @@ Before start using the module, some initial configuration is required.
 ### Tools
 
 - Terraform 0.12.23+
-- Access to AWS accounts
-- kubectl
+- Access to an AWS account
 - AWS CLI
+- [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/)
+- [aws-iam-authenticator](https://docs.aws.amazon.com/eks/latest/userguide/install-aws-iam-authenticator.html)
 
 ### Configure terraform backend: tfstate S3 bucket
 

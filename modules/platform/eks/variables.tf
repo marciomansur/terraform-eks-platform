@@ -29,9 +29,15 @@ variable "vpc_security_group_id" {
 variable "app_subnet_ids" {
   type = list(string)
 }
+variable "app_subnet_cidr" {
+  type = list(string)
+}
 
 variable "app_size" {}
 
+variable "db_subnet_cidr" {
+  type = list(string)
+}
 variable "db_subnet_ids" {
   type = list(string)
 }

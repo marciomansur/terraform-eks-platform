@@ -4,6 +4,10 @@ output "cluster_kubeconfig" {
   depends_on = [aws_eks_cluster.cluster]
 }
 
+output "cluster_name" {
+  value = aws_eks_cluster.cluster.name
+}
+
 output "lb_target_group_arn" {
   value = aws_lb_target_group.cluster_tg.arn
 }

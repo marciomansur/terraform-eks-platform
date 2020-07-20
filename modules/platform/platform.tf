@@ -28,6 +28,8 @@ module "eks" {
   vpc_security_group_id = module.network.vpc_security_group_id
   app_subnet_ids        = module.network.app_subnet_ids
   db_subnet_ids         = module.network.db_subnet_ids
+  app_subnet_cidr       = module.network.app_subnet_cidr
+  db_subnet_cidr        = module.network.db_subnet_cidr
 
   instance_type = var.instance_type
   app_size      = var.app_size
@@ -53,4 +55,12 @@ module "ingress" {
 
 output "cluster_kubeconfig" {
   value = module.eks.cluster_kubeconfig
+}
+
+output "cluster_name" {
+  value = module.eks.cluster_name
+}
+
+output "cluster_public_domain" {
+ value = module.ingress.cluster_public_domain
 }

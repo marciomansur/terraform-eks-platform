@@ -55,9 +55,9 @@ resource "aws_security_group" "worker_node_security_group" {
 
   ingress {
     from_port   = 0
-    to_port     = 65535
+    to_port     = 0
     protocol    = "-1"
-    cidr_blocks = concat(var.app_subnet_ids, var.db_subnet_ids)
+    cidr_blocks = concat(var.app_subnet_cidr, var.db_subnet_cidr)
   }
 
   lifecycle {

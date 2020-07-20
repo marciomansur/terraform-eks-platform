@@ -18,5 +18,7 @@ resource "aws_nat_gateway" "nat" {
     create_before_destroy = true
   }
 
+  depends_on = [aws_internet_gateway.vpc_internet_gateway]
+
   tags = local.tags
 }

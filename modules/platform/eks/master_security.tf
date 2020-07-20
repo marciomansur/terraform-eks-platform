@@ -21,7 +21,7 @@ resource "aws_security_group_rule" "worker_node_ingress_https_rule" {
   from_port                = 443
   protocol                 = "tcp"
   security_group_id        = aws_security_group.master_security_group.id
-  source_security_group_id = var.vpc_security_group_id
+  source_security_group_id = aws_security_group.worker_node_security_group.id
   to_port                  = 443
 }
 

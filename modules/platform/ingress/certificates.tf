@@ -6,7 +6,7 @@ resource "aws_acm_certificate" "cluster_cert" {
 resource "aws_route53_record" "validation" {
   name    = aws_acm_certificate.cluster_cert.domain_validation_options[0].resource_record_name
   type    = aws_acm_certificate.cluster_cert.domain_validation_options[0].resource_record_type
-  zone_id = data.aws_route53_zone.public_domain_zone.zone_id
+  zone_id = aws_route53_zone.env_domain.zone_id
   records = [aws_acm_certificate.cluster_cert.domain_validation_options[0].resource_record_value]
   ttl     = "60"
 }
