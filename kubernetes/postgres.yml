@@ -5,7 +5,7 @@ metadata:
   labels:
     db: postgres
 data:
-  # TODO: this data should not be exposed, to change for secret claimer in k8s
+  # TODO: this data should not be exposed, to change for a secret claimer in k8s
   POSTGRES_DB: postgresdb
   POSTGRES_USER: postgresadmin
 ---

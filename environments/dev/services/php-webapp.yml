@@ -2,6 +2,9 @@ apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
 metadata:
   name: php-webapp-ingress
+  labels:
+    app: php
+    tier: backend
   annotations:
     ingress.kubernetes.io/rewrite-target: /
 spec:
@@ -10,8 +13,8 @@ spec:
         paths:
           - path: /
             backend:
-              serviceName: php-webapp-service
-              servicePort: 9000
+              serviceName: webapp
+              servicePort: 80
 ---
 apiVersion: v1
 kind: Service

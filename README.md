@@ -4,7 +4,7 @@ A terraform module for orchestrating the lifecycle (creation, updating, terminat
 
 ## Architecture
 
-Session for explaining solutions architecture
+To explore the solution architecture, click [here](docs/system-architecture.md)
 
 ## Prerequisites
 
@@ -12,11 +12,21 @@ Before start using the module, some initial configuration is required.
 
 ### Tools
 
-- Terraform 0.12.23+
+- [Terraform 0.12.23+](https://www.terraform.io/downloads.html)
 - Access to an AWS account
-- AWS CLI
+- [AWS CLI](https://aws.amazon.com/cli/)
 - [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/)
-- [aws-iam-authenticator](https://docs.aws.amazon.com/eks/latest/userguide/install-aws-iam-authenticator.html)
+
+### Authenticate to AWS
+
+The following steps requires access to AWS. You can follow [this](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_users_create.html) tutorial to set up an IAM user for development needs.
+With the AWS CLI, run:
+
+```bash
+aws configure
+```
+
+It'll create a new profile under your `~/.aws` folder, with your credentials. You can set different profiles and choose which one to work. Follow [this](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-profiles.html) tutorial.
 
 ### Configure terraform backend: tfstate S3 bucket
 
@@ -65,17 +75,21 @@ And you're now ready to start deploying with Terraform!
  This project uses a modular approach, which means you can use the same set of Terraform modules and Kubernetes manifests for all environments, with some different set of configurations.
  Before creating a new env or modifying an existing one:
  
- - `/environments` - Terraform module to create required resources for that account (IAM, S3, etc);
- - `/kubernetes` - Contains Terraform modules to configure clusters
- - `/modules` - Create resources required before cluster creation (e.g. VPC, subnets, etc);
-   - `/platform` - Create resources that are required to run a Kubernetes cluster (EBS, EC2 instances, etc);
+ - `/environments` - Which environment to deploy and configure your setup;
+   - `/config` - Contains the raw configuration to run the Terraform modules;
+   - `/services` - Contains information to run the services in Kubernetes cluster;
+ - `/kubernetes` - Contains all Kubernetes resources to start a cluster, such as Ingress Controller;
+ - `/modules` - Terraform modules that can be used in many different places;
+   - `/platform` - Create resources for network, external ingress and EKS configuration;
  
   
 ## Running the setup for environment
 
-If you're creating a new env (even in another repo), click here. To run the modules and to create a new environment, follow the next steps.
+To run the modules and to create a new environment, follow the next steps.
 
-### Terraform part
+NOTE: Your public domain needs to have a hosted zone already created. If your registrar is somewhere else than Route53, make sure to add the NS records from your AWS hosted zone into your DNS configuration. Terraform won't be able to issue certificates or configure ALB ingress otherwise.
+
+### Step 1: Terraform
 
 The objective is to manage resources for each environment:
 
@@ -86,7 +100,7 @@ terraform plan -var-file='config/variables.tfvars' -out=tfplan
 terraform apply tfplan
 ```
 
-And you're done! After waiting for a while until Terraform can spawn every resource, you will have an up and running cluster in AWS. 
+And you're done! After waiting for a while until Terraform can spin up every resource, you will have an up and running cluster in AWS.
 
 Terraform will generate the kubeconfig for you to access your cluster using `kubectl`. In order to use it correctly, run:
 
@@ -98,3 +112,45 @@ export KUBECONFIG=~/.kube/contexts/$CLUSTER_NAME.yml
 By doing this, you make sure you can access multiple clusters with different contexts.
 
 
+### Step 2: Kubernetes initial config
+
+With your cluster up and running and your kubectl context point to the new cluster, you're ready to proceed.
+Before doing anything else, add the labels to your nodes, so the master knows where to manage the pods from your deployments:
+
+```bash
+kubectl get nodes
+kubectl label nodes <node-name> clusterLayer=app
+kubectl label nodes <node-name> clusterLayer=db
+```
+
+As of now, this step is not yet automated, so you will need to check on AWS console which nodes belongs to which subnet.
+
+Now, deploy the initial config by running:
+
+```bash
+kubectl apply -f kubernetes/
+```
+
+Wait a little until the your pods status is `Ready`.
+
+### Step 3: Kubernetes deployments
+
+With your cluster configured, you can now proceed to deploy your services. Each service has a different set of configurations for each environment. To run everything, just do:
+
+```bash
+kubectl apply -f environments/$ENV/services/
+```
+
+Try to reach your application at: `webapp.{env}.{public_domain}`
+
+## Improvements and next steps
+
+The solution needs some improvements to be used as a production setup:
+
+- There's a lot of manual steps, and some of them could lead to a total failure at creating a new environment. A wrapper around the solution is a good idea, this way, we can  reduce the number of steps and do more imperative checks.
+Another good suggestion is to use something like [Argo](https://argoproj.github.io/) to create a workflow and manage configuration;
+- This whole solution can be containerized, so the dependencies can be managed better;
+- The `/services` part can be abstracted. Some configurations won't change often, just environmental changes. A tool like [Kustomize](https://kustomize.io/) or [Helm](https://helm.sh/) could be useful to create packages and automate the deployment;
+- Helm can also be used to manage cluster dependencies;
+- The process of deployment requires manual work. A CI/CD tool is required to create some hooks and automate deployments and tests.
+- The Terraform module can be extensible for multiple private subnets, and it should also support peering and VPN access.
